@@ -1,1 +1,6 @@
 rootProject.name = 'rococo'
+include 'rococo-auth'
+include 'rococo-gateway'
+include 'rococo-userdata'
+include 'rococo-content'
+include 'rococo-geo'
