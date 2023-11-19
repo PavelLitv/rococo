@@ -24,7 +24,7 @@ public class PaintingJson {
     @JsonProperty("museum")
     private MuseumJson museumJson;
 
-    public PaintingJson(){};
+    public PaintingJson(){}
 
     public String getContent() {
         return content;

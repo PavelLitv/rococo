@@ -1,6 +1,5 @@
 package guru.qa.rococo.data;
 
-import guru.qa.rococo.model.ArtistJson;
 import guru.qa.rococo.model.PaintingJson;
 import jakarta.persistence.*;
 

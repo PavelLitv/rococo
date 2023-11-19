@@ -11,11 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 @Component
 public class UserDataService {
@@ -28,21 +24,6 @@ public class UserDataService {
     public UserDataService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
-//    @KafkaListener(topics = "users", groupId = "userdata")
-//    public void listener(@Payload UserJson user, ConsumerRecord<String, UserJson> cr) {
-//        LOG.info("### Kafka topic [users] received message: " + user.getUsername());
-//        LOG.info("### Kafka consumer record: " + cr.toString());
-//        UserEntity userDataEntity = new UserEntity();
-//        userDataEntity.setUsername(user.getUsername());
-//        userDataEntity.setCurrency(DEFAULT_USER_CURRENCY);
-//        UserEntity userEntity = userRepository.save(userDataEntity);
-//        LOG.info(String.format(
-//                "### User '%s' successfully saved to database with id: %s",
-//                user.getUsername(),
-//                userEntity.getId()
-//        ));
-//    }
 
     public @Nonnull
     UserJson create(@Nonnull UserJson username){

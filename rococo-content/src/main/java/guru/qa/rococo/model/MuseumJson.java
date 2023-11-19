@@ -3,7 +3,6 @@ package guru.qa.rococo.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.rococo.data.MuseumEntity;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 public class MuseumJson {
