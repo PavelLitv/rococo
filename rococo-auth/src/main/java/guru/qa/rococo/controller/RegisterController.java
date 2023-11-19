@@ -3,6 +3,7 @@ package guru.qa.rococo.controller;
 import guru.qa.rococo.model.RegistrationModel;
 import guru.qa.rococo.model.UserJson;
 import guru.qa.rococo.service.UserService;
+import guru.qa.rococo.service.api.UserDataClient;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -35,13 +36,16 @@ public class RegisterController {
 
     private final String rococoFrontUri;
 
+    private final UserDataClient userDataClient;
+
     @Autowired
-    public RegisterController(UserService userService,
-//                              KafkaTemplate<String, UserJson> kafkaTemplate,
-                              @Value("${rococo-front.base-uri}") String rococoFrontUri) {
+    public RegisterController(
+            UserService userService,
+            @Value("${rococo-front.base-uri}") String rococoFrontUri,
+            UserDataClient userDataClient) {
         this.userService = userService;
-//        this.kafkaTemplate = kafkaTemplate;
         this.rococoFrontUri = rococoFrontUri;
+        this.userDataClient = userDataClient;
     }
 
     @GetMapping("/register")
@@ -68,8 +72,7 @@ public class RegisterController {
 
                 UserJson user = new UserJson();
                 user.setUsername(registrationModel.getUsername());
-//                kafkaTemplate.send("users", user);
-                LOG.info("### Kafka topic [users] sent message: " + user.getUsername());
+                userDataClient.createUser(user);
             } catch (DataIntegrityViolationException e) {
                 LOG.error("### Error while registration user: " + e.getMessage());
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

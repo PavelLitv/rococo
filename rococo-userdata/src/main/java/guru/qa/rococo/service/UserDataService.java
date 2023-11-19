@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 @Component
 public class UserDataService {
@@ -26,38 +25,28 @@ public class UserDataService {
     }
 
     public @Nonnull
-    UserJson create(@Nonnull UserJson username){
+    UserJson create(@Nonnull UserJson userJson) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(username.getUsername());
-        UserEntity createdUser = userRepository.save(userEntity);
-        return UserJson.fromEntity(createdUser);
+        userEntity.setUsername(userJson.getUsername());
+
+        return UserJson.fromEntity(userRepository.save(userEntity));
     }
 
-
     public @Nonnull
-    UserJson update(@Nonnull UserJson user) {
-        UserEntity userEntity = getRequiredUser(user.getUsername());
-        userEntity.setFirstname(user.getFirstname());
-        userEntity.setLastname(user.getLastname());
-        userEntity.setAvatar(user.getAvatar() != null ? user.getAvatar().getBytes(StandardCharsets.UTF_8) : null);
-        UserEntity saved = userRepository.save(userEntity);
-        return UserJson.fromEntity(saved);
+    UserJson update(@Nonnull UserJson userJson) {
+        UserEntity userEntity = getRequiredUser(userJson.getUsername());
+        userEntity.setFirstname(userJson.getFirstname());
+        userEntity.setLastname(userJson.getLastname());
+        userEntity.setAvatar(userJson.getAvatar() != null ? userJson.getAvatar().getBytes(StandardCharsets.UTF_8) : null);
+
+        return UserJson.fromEntity(userRepository.save(userEntity));
     }
 
     public @Nonnull
     UserJson getCurrentUser(@Nonnull String username) {
-        return UserJson.fromEntity(getRequiredUser(username));
-    }
+        UserEntity userEntity = getRequiredUser(username);
 
-    public @Nonnull
-    List<UserJson> allUsers() {
-        List<UserEntity> userEntities = userRepository.findAll();
-        List<UserJson> userJsons = userEntities
-                .stream()
-                .map(UserJson::fromEntity)
-                .toList();
-
-        return userJsons;
+        return UserJson.fromEntity(userEntity);
     }
 
     private @Nonnull UserEntity getRequiredUser(@Nonnull String username) {

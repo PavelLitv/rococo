@@ -1,9 +1,10 @@
 package guru.qa.rococo.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -12,35 +13,25 @@ public class RococoGatewayServiceConfig {
 
     public static final int THREE_MB = 3145728;
 
-    private final String rococoUserdataBaseUri;
+//    private final String rococoUserdataBaseUri;
+//
+//    @Autowired
+//    public RococoGatewayServiceConfig(@Value("${rococo-userdata.base-uri}") String rococoUserdataBaseUri) {
+//        this.rococoUserdataBaseUri = rococoUserdataBaseUri;
+//    }
 
-    @Autowired
-    public RococoGatewayServiceConfig(@Value("${rococo-userdata.base-uri}") String rococoUserdataBaseUri) {
-        this.rococoUserdataBaseUri = rococoUserdataBaseUri;
+    @Bean
+    public RestTemplate restTemplate() {
+       return new RestTemplateBuilder()
+                .additionalMessageConverters(new MappingJackson2HttpMessageConverter())
+                .build();
     }
 
     @Bean
-    public WebClient webClient() {
-        return WebClient.builder()
+    public WebClient webClient(){
+                return WebClient.builder()
                 .exchangeStrategies(ExchangeStrategies.builder().codecs(
                         configurer -> configurer.defaultCodecs().maxInMemorySize(THREE_MB)).build())
                 .build();
     }
-
-    //soap
-//    @Bean
-//    public Jaxb2Marshaller marshaller() {
-//        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-//        marshaller.setContextPath("guru.qa.rococo.userdata.wsdl");
-//        return marshaller;
-//    }
-//
-//    @Bean
-//    public SoapUserDataClient userDataClient(Jaxb2Marshaller marshaller) {
-//        SoapUserDataClient client = new SoapUserDataClient();
-//        client.setDefaultUri(nifflerUserdataBaseUri + "/ws");
-//        client.setMarshaller(marshaller);
-//        client.setUnmarshaller(marshaller);
-//        return client;
-//    }
 }

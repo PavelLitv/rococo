@@ -63,14 +63,14 @@ public class UserJson {
     }
 
     public static UserJson fromEntity(UserEntity entity) {
-        UserJson usr = new UserJson();
+        UserJson userJson = new UserJson();
         byte[] avatar = entity.getAvatar();
-        usr.setId(entity.getId());
-        usr.setUsername(entity.getUsername());
-        usr.setFirstname(entity.getFirstname());
-        usr.setLastname(entity.getLastname());
-        usr.setAvatar(avatar != null && avatar.length > 0 ? new String(entity.getAvatar(), StandardCharsets.UTF_8) : null);
-        return usr;
+        userJson.setId(entity.getId());
+        userJson.setUsername(entity.getUsername());
+        userJson.setFirstname(entity.getFirstname());
+        userJson.setLastname(entity.getLastname());
+        userJson.setAvatar(avatar != null && avatar.length > 0 ? new String(entity.getAvatar(), StandardCharsets.UTF_8) : null);
+        return userJson;
     }
 
     @Override

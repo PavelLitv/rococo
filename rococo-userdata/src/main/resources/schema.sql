@@ -6,6 +6,6 @@ create table if not exists users
     username                varchar(50) unique not null,
     firstname               varchar(50),
     lastname                varchar(50),
-    avatar                  BLOB,
+    avatar                  MEDIUMBLOB,
     primary key (id, username)
 );

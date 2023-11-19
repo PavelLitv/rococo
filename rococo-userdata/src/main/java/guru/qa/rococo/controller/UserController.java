@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 public class UserController {
 
@@ -21,23 +19,18 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/createUser")
+    @PostMapping("/user")
     public UserJson createUserInfo(@RequestBody UserJson user) {
         return userService.create(user);
     }
 
-    @PatchMapping("/updateUser")
+    @PatchMapping("/user")
     public UserJson updateUserInfo(@RequestBody UserJson user) {
         return userService.update(user);
     }
 
-    @GetMapping("/currentUser")
+    @GetMapping("/user")
     public UserJson currentUser(@RequestParam String username) {
         return userService.getCurrentUser(username);
-    }
-
-    @GetMapping("/allUsers")
-    public List<UserJson> allUsers() {
-        return userService.allUsers();
     }
 }

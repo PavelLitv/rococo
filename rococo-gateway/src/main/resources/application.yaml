@@ -1,5 +1,5 @@
 server:
-  port: 8090
+  port: 8080
   error:
     include:
       message: true
@@ -65,7 +65,7 @@ spring:
 rococo-content:
   base-uri: 'http://content.rococo.dc:8091'
 rococo-userdata:
-  base-uri: 'http://userdata.niffler.dc:8092'
+  base-uri: 'http://userdata.rococo.dc:8092'
 rococo-geo:
   base-uri: 'http://127.0.0.1:8093'
 rococo-client:

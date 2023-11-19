@@ -2,23 +2,17 @@ package guru.qa.rococo.controller;
 
 
 import guru.qa.rococo.model.UserJson;
-import guru.qa.rococo.service.UserDataClient;
+import guru.qa.rococo.service.api.UserDataClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequestMapping("/api/user")
 public class UserController {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
@@ -26,27 +20,20 @@ public class UserController {
     private final UserDataClient userDataClient;
 
     @Autowired
-    public UserController(@Qualifier("rest") UserDataClient userDataClient) {
+    public UserController(UserDataClient userDataClient) {
         this.userDataClient = userDataClient;
     }
 
-    @PostMapping("/updateUserInfo")
-    public UserJson updateUserInfo(@AuthenticationPrincipal Jwt principal,
-                                   @Validated @RequestBody UserJson user) {
+    @GetMapping
+    public UserJson getUser(@AuthenticationPrincipal Jwt principal) {
         String username = principal.getClaim("sub");
-        user.setUsername(username);
-        return userDataClient.updateUserInfo(user);
+
+        return userDataClient.getUser(username);
     }
 
-    @GetMapping("/currentUser")
-    public UserJson currentUser(@AuthenticationPrincipal Jwt principal) {
-        String username = principal.getClaim("sub");
-        return userDataClient.currentUser(username);
-    }
+    @PatchMapping
+    public UserJson editUser(@RequestBody UserJson userJson) {
 
-    @GetMapping("/allUsers")
-    public List<UserJson> allUsers(@AuthenticationPrincipal Jwt principal) {
-        String username = principal.getClaim("sub");
-        return userDataClient.allUsers(username);
+        return userDataClient.editUser(userJson);
     }
 }
