@@ -10,6 +10,10 @@ import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -31,13 +35,16 @@ public class GeoService {
     }
 
     public @Nonnull
-    List<CountryJson> allCountry() {
+    Page<CountryJson> allCountry(Pageable pageable) {
         List<CountryJson> countries = new ArrayList<>();
-        for (CountryEntity country : countryRepository.findAll()) {
+        Page<CountryEntity> countryEntities = countryRepository.findAll(
+                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize())
+        );
+        for (CountryEntity country : countryEntities) {
             countries.add(CountryJson.fromEntity(country));
         }
 
-        return countries;
+        return new PageImpl<>(countries, countryEntities.getPageable(), countryEntities.getTotalElements());
     }
 
     public @Nonnull
@@ -47,13 +54,42 @@ public class GeoService {
 
     public @Nonnull
     GeoJson getGeoById(UUID uuid) {
-        return GeoJson.fromEntity(geoRepository.getGeoById(uuid));
+        GeoEntity geoEntity = geoRepository.getGeoById(uuid);
+
+        return GeoJson.fromEntity(geoEntity);
     }
 
     public @Nonnull
     GeoJson addGeo(GeoJson geoJson) {
         GeoEntity geoEntity = GeoEntity.fromJson(geoJson);
+        GeoEntity saved = geoRepository.save(geoEntity);
 
-        return GeoJson.fromEntity(geoRepository.save(geoEntity));
+        return GeoJson.fromEntity(saved);
+    }
+
+    public List<GeoJson> getAllGeo() {
+        List<GeoJson> geoJsons = new ArrayList<>();
+        List<GeoEntity> entities = geoRepository.findAll();
+        for(GeoEntity entity : entities) {
+            geoJsons.add(GeoJson.fromEntity(entity));
+        }
+
+        return geoJsons;
+    }
+
+    public GeoJson getGeoByMuseumId(UUID uuid) {
+        GeoEntity geoEntity = geoRepository.getGeoEntityByMuseumId(uuid);
+
+        return GeoJson.fromEntity(geoEntity);
+    }
+
+    public GeoJson editGeo(GeoJson geoJson) {
+        GeoEntity geoEntity = geoRepository.getGeoEntityByMuseumId(geoJson.getMuseumId());
+        geoEntity.setCity(geoJson.getCity());
+        geoEntity.setMuseumId(geoJson.getMuseumId());
+        geoEntity.setCountryEntity(CountryEntity.fromJson(geoJson.getCountryJson()));
+        GeoEntity savedGeo = geoRepository.save(geoEntity);
+
+        return GeoJson.fromEntity(savedGeo);
     }
 }

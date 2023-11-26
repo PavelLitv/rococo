@@ -16,6 +16,9 @@ public class GeoJson {
     @JsonProperty("city")
     private String city;
 
+    @JsonProperty("museum_id")
+    private UUID museumId;
+
     public GeoJson() {
     }
 
@@ -43,10 +46,19 @@ public class GeoJson {
         this.city = city;
     }
 
+    public UUID getMuseumId() {
+        return museumId;
+    }
+
+    public void setMuseumId(UUID museumId) {
+        this.museumId = museumId;
+    }
+
     public static GeoJson fromEntity(GeoEntity entity) {
         GeoJson geoJson = new GeoJson();
         geoJson.setId(entity.getId());
         geoJson.setCity(entity.getCity());
+        geoJson.setMuseumId(entity.getMuseumId());
         geoJson.setCountryJson(CountryJson.fromEntity(entity.getCountryEntity()));
 
         return geoJson;

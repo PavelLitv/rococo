@@ -209,5 +209,6 @@ create table if not exists geo
     id           binary(16) unique DEFAULT (UUID())  primary key,
     country_id   binary(16) DEFAULT (UUID())         not null,
     city         varchar(50)                         not null,
+    museum_id    binary(16) unique DEFAULT (UUID())  not null,
     foreign key (country_id) references country (id)
 );

@@ -31,7 +31,8 @@ public class SecurityConfigMain {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         corsCustomizer.corsCustomizer(http);
 
-        http.authorizeHttpRequests(customizer ->
+        http.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(customizer ->
                         customizer.requestMatchers(
                                         antMatcher("/actuator/health"),
                                         antMatcher(HttpMethod.GET, "/api/session"),

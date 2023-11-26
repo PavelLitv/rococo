@@ -5,11 +5,15 @@ import guru.qa.rococo.data.repository.MuseumRepository;
 import guru.qa.rococo.model.MuseumJson;
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,9 +53,15 @@ public class MuseumService {
         return MuseumJson.fromEntity(museumRepository.getById(uuid));
     }
 
-    //todo заглушка
-    public List<MuseumJson> getMuseums(String username, Date from, Date to) {
+    public Page<MuseumJson> getMuseums(Pageable pageable) {
+        List<MuseumJson> museums = new ArrayList<>();
+        Page<MuseumEntity> museumEntities = museumRepository.findAll(
+                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize())
+        );
+        for (MuseumEntity museum : museumEntities) {
+            museums.add(MuseumJson.fromEntity(museum));
+        }
 
-        return null;
+        return new PageImpl<>(museums, museumEntities.getPageable(), museumEntities.getTotalElements());
     }
 }

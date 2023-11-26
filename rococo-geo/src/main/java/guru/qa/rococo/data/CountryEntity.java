@@ -11,7 +11,7 @@ import java.util.UUID;
 public class CountryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
+    @Column(name = "id", nullable = false)
     private UUID id;
 
     @Column(nullable = false, unique = true)
@@ -36,6 +36,7 @@ public class CountryEntity {
     public static CountryEntity fromJson(CountryJson countryJson) {
         CountryEntity countryEntity = new CountryEntity();
         countryEntity.setId(countryJson.getId());
+        countryEntity.setName(countryJson.getName());
 
         return countryEntity;
     }

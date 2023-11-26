@@ -13,15 +13,18 @@ import static jakarta.persistence.FetchType.EAGER;
 public class GeoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")
+    @Column(name = "id", nullable = false)
     private UUID id;
 
     @OneToOne(fetch = EAGER)
     @JoinColumn(name= "country_id", referencedColumnName = "id")
-    private CountryEntity countryEntity = new CountryEntity();
+    private CountryEntity countryEntity;
 
     @Column(nullable = false)
     private String city;
+
+    @Column(nullable = false, name = "museum_id")
+    private UUID museumId;
 
     public UUID getId() {
         return id;
@@ -47,9 +50,18 @@ public class GeoEntity {
         this.countryEntity = countryEntity;
     }
 
+    public UUID getMuseumId() {
+        return museumId;
+    }
+
+    public void setMuseumId(UUID museumId) {
+        this.museumId = museumId;
+    }
+
     public static GeoEntity fromJson(GeoJson geoJson) {
         GeoEntity geoEntity = new GeoEntity();
         geoEntity.setCity(geoJson.getCity());
+        geoEntity.setMuseumId(geoJson.getMuseumId());
         geoEntity.setCountryEntity(CountryEntity.fromJson(geoJson.getCountryJson()));
 
         return geoEntity;
