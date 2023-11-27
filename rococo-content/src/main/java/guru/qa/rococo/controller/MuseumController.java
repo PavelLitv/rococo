@@ -20,9 +20,14 @@ public class MuseumController {
         this.museumService = museumService;
     }
 
-    @GetMapping("/museums")
+    @GetMapping("/museum")
     public Page<MuseumJson> getAllMuseums(Pageable pageable) {
         return museumService.getMuseums(pageable);
+    }
+
+    @GetMapping("/museum/filter")
+    public Page<MuseumJson> getMuseumsByTitle(@RequestParam String title, Pageable pageable) {
+        return museumService.getMuseumsByTitle(title, pageable);
     }
 
     @GetMapping("/museum/{uuid}")

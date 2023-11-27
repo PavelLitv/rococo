@@ -27,15 +27,13 @@ public class MuseumService {
         this.museumRepository = museumRepository;
     }
 
-    public @Nonnull
-    MuseumJson addMuseum(@Nonnull MuseumJson museumJson) {
+    public MuseumJson addMuseum(@Nonnull MuseumJson museumJson) {
         MuseumEntity museumEntity = MuseumEntity.fromJson(museumJson);
 
         return MuseumJson.fromEntity(museumRepository.save(museumEntity));
     }
 
-    public @Nonnull
-    MuseumJson editMuseum(@Nonnull MuseumJson museumJson) {
+    public MuseumJson editMuseum(@Nonnull MuseumJson museumJson) {
         MuseumEntity museumEntity = museumRepository.getById(museumJson.getId());
         if (museumEntity == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can`t find museumJson by given id: " + museumJson.getId());
@@ -48,8 +46,7 @@ public class MuseumService {
         }
     }
 
-    public @Nonnull
-    MuseumJson getMuseum(@Nonnull UUID uuid) {
+    public MuseumJson getMuseum(@Nonnull UUID uuid) {
         return MuseumJson.fromEntity(museumRepository.getById(uuid));
     }
 
@@ -57,6 +54,19 @@ public class MuseumService {
         List<MuseumJson> museums = new ArrayList<>();
         Page<MuseumEntity> museumEntities = museumRepository.findAll(
                 PageRequest.of(pageable.getPageNumber(), pageable.getPageSize())
+        );
+        for (MuseumEntity museum : museumEntities) {
+            museums.add(MuseumJson.fromEntity(museum));
+        }
+
+        return new PageImpl<>(museums, museumEntities.getPageable(), museumEntities.getTotalElements());
+    }
+
+
+    public Page<MuseumJson> getMuseumsByTitle(String title, Pageable pageable) {
+        List<MuseumJson> museums = new ArrayList<>();
+        Page<MuseumEntity> museumEntities = museumRepository.findAllByTitleContains(
+                title, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize())
         );
         for (MuseumEntity museum : museumEntities) {
             museums.add(MuseumJson.fromEntity(museum));

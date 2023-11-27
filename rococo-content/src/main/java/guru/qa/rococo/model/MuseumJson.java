@@ -23,13 +23,16 @@ public class MuseumJson {
         museumJson.setId(entity.getId());
         museumJson.setTitle(entity.getTitle());
         museumJson.setDescription(entity.getDescription());
-        museumJson.setPhoto(new String(entity.getPhoto()));
+        if (entity.getPhoto() != null) {
+            museumJson.setPhoto(new String(entity.getPhoto()));
+        }
 
         return museumJson;
     }
 
     public MuseumJson() {
     }
+
     public UUID getId() {
         return id;
     }

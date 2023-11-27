@@ -1,8 +1,6 @@
 package guru.qa.rococo.service.api;
 
-import guru.qa.rococo.model.CustomPageImpl;
-import guru.qa.rococo.model.GeoJson;
-import guru.qa.rococo.model.MuseumJson;
+import guru.qa.rococo.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -31,11 +29,21 @@ public class ContentDataClient {
     }
 
     public Page<MuseumJson> getMuseums(Pageable pageable) {
-        String url = rococoContentBaseUrl + "/museums?size={size}&page={page}";
+        String url = rococoContentBaseUrl + "/museum?size={size}&page={page}";
         ResponseEntity<CustomPageImpl<MuseumJson>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
                 null, new ParameterizedTypeReference<>() {
                 },
                 pageable.getPageSize(), pageable.getPageNumber());
+
+        return responseEntity.getBody();
+    }
+
+
+    public Page<MuseumJson> filterMuseumsByTitle(String title) {
+        String url = rococoContentBaseUrl + "/museum/filter?title={title}";
+        ResponseEntity<CustomPageImpl<MuseumJson>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+                null, new ParameterizedTypeReference<>() {
+                }, title);
 
         return responseEntity.getBody();
     }
@@ -67,5 +75,90 @@ public class ContentDataClient {
         editedMuseum.setGeo(editedGeo);
 
         return editedMuseum;
+    }
+
+    public Page<ArtistJson> getArtists(Pageable pageable) {
+        String url = rococoContentBaseUrl + "/artists?size={size}&page={page}";
+        ResponseEntity<CustomPageImpl<ArtistJson>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+                null, new ParameterizedTypeReference<>() {
+                },
+                pageable.getPageSize(), pageable.getPageNumber());
+
+        return responseEntity.getBody();
+    }
+
+    public ArtistJson getArtist(UUID uuid) {
+        String url = rococoContentBaseUrl + "/artist/{uuid}";
+        ArtistJson artistJson = restTemplate.getForObject(url, ArtistJson.class, uuid);
+
+        return artistJson;
+    }
+
+    public ArtistJson addArtist(ArtistJson artistJson) {
+        String url = rococoContentBaseUrl + "/artist";
+        ArtistJson createdArtist = restTemplate.postForObject(url, artistJson, ArtistJson.class);
+
+        return createdArtist;
+    }
+
+    public ArtistJson editArtist(ArtistJson artistJson) {
+        String url = rococoContentBaseUrl + "/artist";
+        ArtistJson editedArtist = restTemplate.patchForObject(url, artistJson, ArtistJson.class);
+
+        return editedArtist;
+    }
+
+    public Page<ArtistJson> filterArtistByName(String name) {
+        String url = rococoContentBaseUrl + "/artist/filter?name={name}";
+        ResponseEntity<CustomPageImpl<ArtistJson>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+                null, new ParameterizedTypeReference<>() {
+                },
+                name);
+
+        return responseEntity.getBody();
+    }
+
+    public Page<PaintingJson> getPaintingsByArtist(UUID uuid, Pageable pageable) {
+        String url = rococoContentBaseUrl + "/painting/artist/{uuid}";
+        ResponseEntity<CustomPageImpl<PaintingJson>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+                null, new ParameterizedTypeReference<>() {
+                },
+                uuid, pageable.getPageSize(), pageable.getPageNumber());
+
+        return responseEntity.getBody();
+    }
+
+    public PaintingJson addPainting(PaintingJson paintingJson) {
+        String url = rococoContentBaseUrl + "/painting";
+        PaintingJson createdPainting = restTemplate.postForObject(url, paintingJson, PaintingJson.class);
+
+        return createdPainting;
+    }
+
+    public PaintingJson getPainting(UUID uuid) {
+        String url = rococoContentBaseUrl + "/painting/{uuid}";
+        PaintingJson paintingJson = restTemplate.getForObject(url, PaintingJson.class, uuid);
+
+        return paintingJson;
+    }
+
+    public Page<PaintingJson> getAllPaintings(Pageable pageable) {
+        String url = rococoContentBaseUrl + "/painting/all";
+        ResponseEntity<CustomPageImpl<PaintingJson>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+                null, new ParameterizedTypeReference<>() {
+                },
+                pageable.getPageSize(), pageable.getPageNumber());
+
+        return responseEntity.getBody();
+    }
+
+    public Page<PaintingJson> filterPaintingsByTitle(String title) {
+        String url = rococoContentBaseUrl + "/painting/filter?title={title}";
+        ResponseEntity<CustomPageImpl<PaintingJson>> responseEntity = restTemplate.exchange(url, HttpMethod.GET,
+                null, new ParameterizedTypeReference<>() {
+                },
+                title);
+
+        return responseEntity.getBody();
     }
 }

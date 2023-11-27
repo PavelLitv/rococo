@@ -4,13 +4,19 @@ import guru.qa.rococo.data.ArtistEntity;
 import guru.qa.rococo.data.repository.ArtistRepository;
 import guru.qa.rococo.model.ArtistJson;
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class ArtistService {
@@ -46,14 +52,29 @@ public class ArtistService {
         }
     }
 
-    public @Nonnull
-    List<ArtistJson> getArtists(@Nonnull String username,
-                                @Nullable Date dateFrom,
-                                @Nullable Date dateTo) {
-        return new ArrayList<>(); //todo заглушка
+    public Page<ArtistJson> getArtists(Pageable pageable) {
+        List<ArtistJson> artists = new ArrayList<>();
+        Page<ArtistEntity> artistEntities = artistRepository.findAll(
+                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize())
+        );
+        for (ArtistEntity artistEntity : artistEntities) {
+            artists.add(ArtistJson.fromEntity(artistEntity));
+        }
+
+        return new PageImpl<>(artists, artistEntities.getPageable(), artistEntities.getTotalElements());
     }
 
     public ArtistJson getArtist(UUID uuid) {
         return ArtistJson.fromEntity(artistRepository.getById(uuid));
+    }
+
+    public Page<ArtistJson> getArtistsByName(String name, Pageable pageable) {
+        List<ArtistJson> artists = new ArrayList<>();
+        Page<ArtistEntity> artistEntities = artistRepository.findAllByNameContains(name, pageable);
+        for (ArtistEntity entity : artistEntities) {
+            artists.add(ArtistJson.fromEntity(entity));
+        }
+
+        return new PageImpl<>(artists, artistEntities.getPageable(), artistEntities.getTotalElements());
     }
 }

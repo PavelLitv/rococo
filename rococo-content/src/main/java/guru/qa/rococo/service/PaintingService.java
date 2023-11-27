@@ -9,6 +9,10 @@ import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -35,14 +39,15 @@ public class PaintingService {
     }
 
     public @Nonnull
-    List<PaintingJson> getAllPaintingByArtist(@Nonnull UUID uuid) {
+    Page<PaintingJson> getAllPaintingByArtist(@Nonnull UUID uuid, Pageable pageable) {
         List<PaintingJson> paintings = new ArrayList<>();
-        List<PaintingEntity> paintingEntities = paintingRepository.findAllByArtistId(uuid);
+        Page<PaintingEntity> paintingEntities = paintingRepository.findAllByArtistId(uuid,
+                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()));
         for (PaintingEntity entity : paintingEntities) {
             paintings.add(PaintingJson.fromEntity(entity));
         }
 
-        return paintings;
+        return new PageImpl<>(paintings, paintingEntities.getPageable(), paintingEntities.getTotalElements());
     }
 
     public @Nonnull
@@ -55,8 +60,9 @@ public class PaintingService {
         paintingEntity.getArtist().setId(paintingJson.getArtistJson().getId());
         paintingEntity.setMuseum(new MuseumEntity());
         paintingEntity.getMuseum().setId(paintingJson.getMuseumJson().getId());
+        PaintingEntity savedPainting = paintingRepository.save(paintingEntity);
 
-        return PaintingJson.fromEntity(paintingRepository.save(paintingEntity));
+        return PaintingJson.fromEntity(savedPainting);
     }
 
     public @Nonnull
@@ -69,5 +75,27 @@ public class PaintingService {
         paintingEntity.setMuseum(MuseumEntity.fromJson(paintingJson.getMuseumJson()));
 
         return PaintingJson.fromEntity(paintingRepository.save(paintingEntity));
+    }
+
+    public Page<PaintingJson> getAllPaintings(Pageable pageable) {
+        List<PaintingJson> paintings = new ArrayList<>();
+        Page<PaintingEntity> paintingEntities = paintingRepository.findAll(
+                PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()));
+        for (PaintingEntity entity : paintingEntities) {
+            paintings.add(PaintingJson.fromEntity(entity));
+        }
+
+        return new PageImpl<>(paintings, paintingEntities.getPageable(), paintingEntities.getTotalElements());
+    }
+
+    public Page<PaintingJson> getPaintingsByName(String title, Pageable pageable) {
+        List<PaintingJson> paintings = new ArrayList<>();
+        Page<PaintingEntity> paintingEntities = paintingRepository.findAllByTitleContains(
+                title, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()));
+        for (PaintingEntity entity : paintingEntities) {
+            paintings.add(PaintingJson.fromEntity(entity));
+        }
+
+        return new PageImpl<>(paintings, paintingEntities.getPageable(), paintingEntities.getTotalElements());
     }
 }

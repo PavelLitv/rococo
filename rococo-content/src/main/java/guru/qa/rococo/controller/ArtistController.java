@@ -3,12 +3,11 @@ package guru.qa.rococo.controller;
 import guru.qa.rococo.model.ArtistJson;
 import guru.qa.rococo.service.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,17 +20,19 @@ public class ArtistController {
         this.artistService = artistService;
     }
 
-    //todo получение всех и пэйджами и получение одного по ид
     @GetMapping("/artists")
-    public List<ArtistJson> getAllArtist(@RequestParam String username,
-                                      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
-                                      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
-        return artistService.getArtists(username,  from, to);
+    public Page<ArtistJson> getArtists(Pageable pageable) {
+        return artistService.getArtists(pageable);
     }
 
-    @GetMapping("/artist")
-    public ArtistJson getArtist(@RequestParam UUID uuid) {
+    @GetMapping("/artist/{uuid}")
+    public ArtistJson getArtist(@PathVariable("uuid") UUID uuid) {
         return artistService.getArtist(uuid);
+    }
+
+    @GetMapping("/artist/filter")
+    public Page<ArtistJson> getArtistsByName(@RequestParam String name, Pageable pageable) {
+        return artistService.getArtistsByName(name, pageable);
     }
 
     @PostMapping("/artist")

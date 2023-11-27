@@ -1,11 +1,14 @@
 package guru.qa.rococo.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import guru.qa.rococo.data.ArtistEntity;
 
+import java.util.Objects;
 import java.util.UUID;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ArtistJson {
+
     @JsonProperty("id")
     private UUID id;
 
@@ -19,18 +22,6 @@ public class ArtistJson {
     private String photo;
 
     public ArtistJson() {
-    }
-
-    public static ArtistJson fromEntity(ArtistEntity entity) {
-        ArtistJson artistJson = new ArtistJson();
-        artistJson.setId(entity.getId());
-        artistJson.setName(entity.getName());
-        artistJson.setBiography(entity.getBiography());
-        if (entity.getPhoto() != null) {
-            artistJson.setPhoto(new String(entity.getPhoto()));
-        }
-
-        return artistJson;
     }
 
     public UUID getId() {
@@ -63,5 +54,25 @@ public class ArtistJson {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ArtistJson that)) return false;
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(biography, that.biography)) return false;
+        return Objects.equals(photo, that.photo);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (biography != null ? biography.hashCode() : 0);
+        result = 31 * result + (photo != null ? photo.hashCode() : 0);
+        return result;
     }
 }

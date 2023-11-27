@@ -34,6 +34,14 @@ public class MuseumController {
         return museums;
     }
 
+    @GetMapping(params = {"title"})
+    public Page<MuseumJson> filterMuseumsByName(@RequestParam(value = "title") String title) {
+        Page<MuseumJson> museums = contentDataClient.filterMuseumsByTitle(title);
+        museums.forEach(aggregator::enrichMuseum);
+
+        return museums;
+    }
+
     @GetMapping("/{uuid}")
     public MuseumJson getMuseum(@PathVariable("uuid") UUID uuid) {
         MuseumJson museum = contentDataClient.getMuseum(uuid);
