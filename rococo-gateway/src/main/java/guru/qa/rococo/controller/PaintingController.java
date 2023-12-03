@@ -44,7 +44,7 @@ public class PaintingController {
     }
 
     @GetMapping(params = {"title"})
-    public Page<PaintingJson> filterArtistsByTitle(@RequestParam(value = "title") String title) {
+    public Page<PaintingJson> filterPaintingByTitle(@RequestParam(value = "title") String title) {
         Page<PaintingJson> paintings = contentDataClient.filterPaintingsByTitle(title);
 
         return paintings;

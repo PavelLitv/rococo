@@ -88,7 +88,7 @@ public class PaintingService {
         return new PageImpl<>(paintings, paintingEntities.getPageable(), paintingEntities.getTotalElements());
     }
 
-    public Page<PaintingJson> getPaintingsByName(String title, Pageable pageable) {
+    public Page<PaintingJson> getPaintingsByTitle(String title, Pageable pageable) {
         List<PaintingJson> paintings = new ArrayList<>();
         Page<PaintingEntity> paintingEntities = paintingRepository.findAllByTitleContains(
                 title, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()));

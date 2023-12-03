@@ -35,8 +35,8 @@ public class PaintingController {
     }
 
     @GetMapping("painting/filter")
-    public Page<PaintingJson> getPaintingsByName(@RequestParam String title, Pageable pageable) {
-        return paintingService.getPaintingsByName(title, pageable);
+    public Page<PaintingJson> getPaintingsByTitle(@RequestParam String title, Pageable pageable) {
+        return paintingService.getPaintingsByTitle(title, pageable);
     }
 
     @PostMapping("/painting")
