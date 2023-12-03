@@ -13,13 +13,6 @@ public class RococoGatewayServiceConfig {
 
     public static final int THREE_MB = 3145728;
 
-//    private final String rococoUserdataBaseUri;
-//
-//    @Autowired
-//    public RococoGatewayServiceConfig(@Value("${rococo-userdata.base-uri}") String rococoUserdataBaseUri) {
-//        this.rococoUserdataBaseUri = rococoUserdataBaseUri;
-//    }
-
     @Bean
     public RestTemplate restTemplate() {
        return new RestTemplateBuilder()
