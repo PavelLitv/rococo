@@ -39,9 +39,7 @@ docker run --name rococo-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -v mysqlr
 
 Для этого зайти в меню Run -> Edit Configurations -> выбрать main класс -> указать Active profiles: local
 
-#### 4. Установить run конфигурацию для всех сервисов бэкенда 'local'
-
-#### 5. Запустить сервисы бэкенда начиная с rococo-auth  
+#### 4. Запустить сервисы бэкенда начиная с rococo-auth  
 Сервисы запустятся на следующих портах:
 - [Rococo-auth]() - *9000*
 - [Rococo-gateway]() - *8080*
@@ -49,6 +47,6 @@ docker run --name rococo-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -v mysqlr
 - [Rococo-content]() - *8091*
 - [Rococo-userData]() - *8092*
 
-#### 6. Схема микросервисов
+#### 5. Схема микросервисов
 
-![Текст с описанием картинки](\readme\img\1.svg)
+![Текст с описанием картинки](/readme/img/1.svg)
