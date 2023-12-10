@@ -15,7 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/museum")
 public class MuseumController {
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MuseumController.class);
 
     private final ContentDataClient contentDataClient;
     private final ContentAggregator aggregator;

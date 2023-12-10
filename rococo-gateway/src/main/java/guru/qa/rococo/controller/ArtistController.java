@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequestMapping("/api/artist")
 public class ArtistController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ArtistController.class);
 
     private final ContentDataClient contentDataClient;
 

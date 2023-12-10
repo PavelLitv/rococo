@@ -14,7 +14,7 @@ import java.util.UUID;
 @RequestMapping("/api/painting")
 public class PaintingController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PaintingController.class);
 
     private final ContentDataClient contentDataClient;
 
