@@ -1,17 +1,13 @@
 package qa.guru.rococo.jupiter.extension;
 
-import io.restassured.http.ContentType;
-
-import io.restassured.response.Response;
 import org.junit.jupiter.api.extension.*;
-import qa.guru.rococo.config.Config;
 import qa.guru.rococo.db.dao.UserDao;
 import qa.guru.rococo.jupiter.annotation.CreateUser;
 import qa.guru.rococo.model.UserJson;
 
 import java.util.UUID;
 
-import static io.restassured.RestAssured.given;
+import static qa.guru.rococo.api.ApiHelper.registerUserByApi;
 import static qa.guru.rococo.jupiter.extension.Utils.getAllureId;
 
 public class UserExtension implements BeforeEachCallback, ParameterResolver, AfterTestExecutionCallback {
@@ -25,15 +21,7 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver, Aft
         user.setUsername(annotation.userName());
         user.setPassword(annotation.password());
         user.setPasswordSubmit(annotation.password());
-        Response body = given().get(Config.getInstance().rococoAuthUrl() + "register");
-        given()
-                .cookie("JSESSIONID", body.cookie("JSESSIONID"))
-                .contentType(ContentType.URLENC)
-                .formParam("_csrf", body.header("X-CSRF-TOKEN"))
-                .formParam("username", user.getUsername())
-                .formParam("password", user.getPassword())
-                .formParam("passwordSubmit", user.getPassword())
-                .post(Config.getInstance().rococoAuthUrl() + "register");
+        registerUserByApi(user);
         context.getStore(NAMESPACE).put(getAllureId(context), user);
     }
 

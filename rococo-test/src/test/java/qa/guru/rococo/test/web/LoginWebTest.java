@@ -2,13 +2,14 @@ package qa.guru.rococo.test.web;
 
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.Test;
+import qa.guru.rococo.jupiter.annotation.ApiLogin;
 import qa.guru.rococo.jupiter.annotation.CreateUser;
 import qa.guru.rococo.jupiter.annotation.DeleteUser;
 import qa.guru.rococo.jupiter.annotation.WebTest;
 import qa.guru.rococo.model.UserJson;
-import qa.guru.rococo.page.LoginPage;
 import qa.guru.rococo.page.MainPage;
 import qa.guru.rococo.page.RegisterPage;
+import qa.guru.rococo.page.WelcomePage;
 
 @WebTest
 public class LoginWebTest {
@@ -25,10 +26,12 @@ public class LoginWebTest {
                 .inputName(user.getUsername())
                 .inputPassword(user.getPassword())
                 .confirmPassword(user.getPassword())
-                .submitRegisterForm()
+                .submitRegisterForm();
+        new WelcomePage()
+                .checkWelcomeMessage()
+                .gotoLoginPage()
                 .inputName(user.getUsername())
-                .inputPassword(user.getPassword());
-        new LoginPage()
+                .inputPassword(user.getPassword())
                 .submitLoginForm()
                 .avatarIsEnable();
     }
@@ -65,6 +68,11 @@ public class LoginWebTest {
                 .checkErrorMessageExistingUserName(user.getUsername());
     }
 
+    @ApiLogin(
+            username = "Petya",
+            password = "12345",
+            user = @CreateUser
+    )
     @Test
     @AllureId("login_04")
     void logout() {

@@ -21,6 +21,6 @@ public class UserDataClient {
 
     public void createUser(UserJson userJson) {
         String uri = rococoUserdataBaseUri + "/user";
-        restTemplate.postForObject(uri, userJson, String.class);
+        restTemplate.postForObject(uri, userJson, UserJson.class);
     }
 }
